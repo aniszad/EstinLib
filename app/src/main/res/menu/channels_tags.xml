@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item
+            android:id="@+id/menu_tag_event"
+            android:title="1CP"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/menu_tag_found_object"
+            android:title="2CP"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/menu_tag_missing_object"
+            android:title="1CS"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/menu_tag_club"
+            android:title="2CS"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/menu_tag_qst"
+            android:title="3CS"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/menu_info"
+            android:title="All"
+            app:showAsAction="always" />
+    </group>
+</menu>

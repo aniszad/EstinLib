@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.progressindicator.CircularProgressIndicator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:trackColor="@color/colorTextGray"
+    app:indicatorColor="@color/colorPurple"
+    android:id="@+id/circular_progress_indicator"
+    android:background="@android:color/transparent"
+    app:indicatorSize="@dimen/_48sdp"
+    >
+
+
+</com.google.android.material.progressindicator.CircularProgressIndicator>

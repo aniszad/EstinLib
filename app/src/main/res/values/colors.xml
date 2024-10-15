@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Custom colors -->
+
+    <color name="colorPrimaryDark">#121417</color>
+    <color name="colorPrimaryDarkTransparent">#90121417</color>
+    <color name="colorPrimaryDarkTransparent1">#80121417</color>
+    <color name="colorSecondaryDark">#1C2126</color>
+    <color name="colorSecondaryDarkTransparentOne">#901C2126</color>
+    <color name="colorSecondaryDarkTransparentTwo">#801C2126</color>
+    <color name="colorTertiaryDark">#94ADC7</color>
+    <color name="colorTextGray">#999EA1</color>
+    <color name="colorPrimaryAccent">#1A80E5</color>
+    <color name="colorBlackTransparent">#10FFFFFF</color>
+    <color name="colorGreen">#4CAF50</color>
+    <color name="colorRed">#F44336</color>
+    <color name="colorPurple">#5D3FD3</color>
+    <color name="colorPurpleTransparent">#205D3FD3</color>
+    <color name="colorHyperlink">#0000EE</color>
+
+
+</resources>

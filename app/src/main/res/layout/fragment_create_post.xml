@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/main"
+    android:background="@color/colorPrimaryDark"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".presentation.ui.activities.CreatePostActivity">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Post"
+                android:textSize="20sp"
+                android:fontFamily="@font/manrope_bold"
+                android:layout_marginStart="16dp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_submit_post"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/submit"
+                app:backgroundTint="@drawable/selector_submit_button_background_tint"
+                android:layout_margin="10dp"
+                app:cornerRadius="15dp"
+                android:enabled="false"
+                android:fontFamily="@font/manrope_medium"
+                android:textColor="@color/white"
+                android:padding="@dimen/_5sdp"
+                app:elevation="0dp"
+                android:textAllCaps="false"
+                android:textSize="12sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_middle"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/cl_top"
+            app:layout_constraintBottom_toTopOf="@id/cl_bottom"
+            >
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_post_text"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                app:boxStrokeWidth="0dp"
+                app:boxCornerRadiusTopStart="0dp"
+                app:boxCornerRadiusTopEnd="0dp"
+                app:cursorColor="@color/colorPurple"
+                app:boxCornerRadiusBottomStart="0dp"
+                app:boxCornerRadiusBottomEnd="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:hintEnabled="false"
+                >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_post_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawablePadding="6dp"
+                    android:hint="Post text"
+                    android:gravity="start|top"
+                    android:fontFamily="@font/manrope_medium"
+                    android:textSize="15sp"
+                    android:scrollHorizontally="false"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/colorTextGray" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/_32sdp"
+            android:paddingTop="@dimen/_16sdp"
+            app:layout_constraintTop_toBottomOf="@id/cl_middle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            >
+            <HorizontalScrollView
+                android:id="@+id/hsv_attachments_scroll_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                app:layout_constraintBottom_toTopOf="@id/btn_add_attachment"
+                >
+                <LinearLayout
+                    android:id="@+id/hsv_attachments_sv"
+                    android:layout_width="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_height="match_parent">
+
+                </LinearLayout>
+            </HorizontalScrollView>
+            <LinearLayout
+                android:id="@+id/btn_add_attachment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/_5sdp"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:paddingHorizontal="4dp"
+                android:paddingEnd="10dp"
+                android:paddingStart="2dp"
+                app:layout_constraintEnd_toStartOf="@id/btn_add_tag"
+                app:layout_constraintTop_toBottomOf="@id/hsv_attachments_scroll_view"
+                app:layout_constraintStart_toStartOf="parent"
+                android:background="@drawable/gray_backg_with_radius"
+                >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_attachment"
+                    app:tint="@color/white"
+                    android:contentDescription="@string/icon_attachment"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_attachment"
+                    android:textColor="@color/white"
+                    android:textAllCaps="false"
+                    android:fontFamily="@font/manrope_medium"
+                    android:layout_gravity="center"
+                    app:iconTint="@color/black"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btn_add_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/gray_backg_with_radius"
+                app:layout_constraintEnd_toStartOf="@id/btn_add_channel"
+                android:paddingVertical="@dimen/_5sdp"
+                android:paddingEnd="10dp"
+                android:paddingStart="2dp"
+                android:layout_marginStart="@dimen/_4sdp"
+                app:layout_constraintStart_toEndOf="@id/btn_add_attachment"
+                app:layout_constraintTop_toBottomOf="@id/hsv_attachments_scroll_view"
+                >
+
+                <ImageView
+                    android:id="@+id/im_add_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_drop_down_arrow"
+                    app:tint="@color/white" />
+
+                <TextView
+                    android:id="@+id/tv_selected_tag"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/manrope_semi_bold"
+                    android:text="@string/tag"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/btn_add_channel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/gray_backg_with_radius"
+                android:paddingVertical="@dimen/_5sdp"
+                android:paddingEnd="10dp"
+                android:paddingStart="2dp"
+                android:layout_marginStart="@dimen/_4sdp"
+                app:layout_constraintStart_toEndOf="@id/btn_add_tag"
+                app:layout_constraintTop_toBottomOf="@id/hsv_attachments_scroll_view"
+                >
+
+                <ImageView
+                    android:id="@+id/im_add_channel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_drop_down_arrow"
+                    app:tint="@color/white" />
+
+                <TextView
+                    android:id="@+id/tv_selected_channel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/manrope_semi_bold"
+                    android:text="@string/channel"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
