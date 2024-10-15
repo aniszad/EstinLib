@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="years_array">
+        <item>1 CP</item>
+        <item>2 CP</item>
+        <item>1 CS</item>
+        <item>2 CS</item>
+        <item>3 CS</item>
+    </string-array>
+</resources>

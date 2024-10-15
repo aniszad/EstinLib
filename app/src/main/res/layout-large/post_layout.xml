@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/cardView"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginVertical="@dimen/_8sdp"
+    android:layout_marginHorizontal="@dimen/_24sdp"
+    app:strokeWidth="@dimen/_1sdp"
+    app:strokeColor="@color/colorTextGray"
+    app:cardCornerRadius="@dimen/_12sdp"
+    android:backgroundTint="@color/colorSecondaryDark"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/_12sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <LinearLayout
+            android:id="@+id/ll_user_name_n_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_6sdp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="parent"
+            >
+            <InitialsAvatarView
+                android:id="@+id/im_user_image"
+                android:layout_width="@dimen/_32sdp"
+                android:layout_height="@dimen/_32sdp"
+                android:layout_marginStart="4dp"
+                android:maxWidth="@dimen/_48sdp"
+                android:maxHeight="@dimen/_32sdp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:id="@+id/tv_full_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/manrope_bold"
+                    android:maxLines="2"
+                    android:maxWidth="@dimen/_135sdp"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="5dp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_11ssp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/ll_user_name_n_type" />
+
+                <TextView
+                    android:id="@+id/tv_about_user"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/manrope_medium"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="5dp"
+                    android:text="@string/_1cp"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="@dimen/_9ssp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/ll_user_name_n_type" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/tv_post_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:paddingHorizontal="@dimen/_5sdp"
+                android:paddingVertical="@dimen/_2sdp"
+                android:maxLines="5"
+                android:fontFamily="@font/manrope_semi_bold"
+                android:background="@drawable/badge_background"
+                android:textSize="@dimen/_9ssp"
+                />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+                <LinearLayout
+                    android:id="@+id/btn_reply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    >
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/reply_icon"
+                        android:padding="0dp"
+                        android:src="@drawable/icon_reply"
+                        android:textAlignment="textStart"
+                        android:textAllCaps="false"
+                        app:iconSize="@dimen/_15sdp"
+                        tools:ignore="TouchTargetSizeCheck" />
+                    <TextView
+                        android:id="@+id/tv_reply"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/reply"
+                        android:gravity="center"
+                        android:padding="@dimen/_2sdp"
+                        android:textSize="@dimen/_9ssp"
+                        android:fontFamily="@font/manrope_medium"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        />
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_post_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/_8sdp"
+            android:fontFamily="@font/manrope_medium"
+            android:padding="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_10ssp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/view_pager_images_attachments"
+            app:layout_constraintTop_toBottomOf="@id/ll_user_name_n_type" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager_images_attachments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxHeight="@dimen/_230sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:nestedScrollingEnabled="true"
+            app:layout_constraintBottom_toTopOf="@id/dots_indicator"
+            app:layout_constraintTop_toBottomOf="@id/tv_post_content"
+            />
+
+        <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+            android:id="@+id/dots_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:dotsCornerRadius="8dp"
+            app:dotsSize="@dimen/_4sdp"
+            app:dotsSpacing="@dimen/_2sdp"
+            app:dotsWidthFactor="2.5"
+            app:dotsColor="@color/black"
+            app:selectedDotColor="@color/white"
+            app:progressMode="true"
+            android:layout_marginVertical="@dimen/_6sdp"
+            app:layout_constraintBottom_toTopOf="@id/cl_interaction"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_pager_images_attachments"
+            />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_interaction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:paddingVertical="@dimen/_12sdp"
+            android:layout_marginHorizontal="@dimen/_6sdp"
+            app:layout_constraintTop_toBottomOf="@id/dots_indicator">
+
+            <com.az.elib.presentation.views.custom.LikeButton
+                android:id="@+id/btn_react"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_heart_outline"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:background="@android:color/transparent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+            <TextView
+                android:id="@+id/tv_react_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="@dimen/_9ssp"
+                android:paddingHorizontal="@dimen/_4sdp"
+                app:layout_constraintTop_toTopOf="@id/btn_react"
+                app:layout_constraintBottom_toBottomOf="@id/btn_react"
+                app:layout_constraintStart_toEndOf="@id/btn_react"
+                />
+            <ImageButton
+                android:id="@+id/btn_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_comment"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:background="@android:color/transparent"
+                app:layout_constraintStart_toEndOf="@id/tv_react_count"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:textSize="@dimen/_9ssp"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
