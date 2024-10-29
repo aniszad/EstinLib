@@ -1,6 +1,6 @@
-# UniConnect
+# Estin Connect
 
-UniConnect is a social media platform designed exclusively for students of [University Name]. It aims to create a digital community where students can connect, share updates, and access essential academic resources. This app brings students together and provides them with a central hub for news, social interaction, and a comprehensive resource library.
+UniConnect is a social media platform designed exclusively for students of Estin. It aims to create a digital community where students can connect, share updates, and access essential academic resources. This app brings students together and provides them with a central hub for news, social interaction, and a comprehensive resource library.
 
 ---
 
