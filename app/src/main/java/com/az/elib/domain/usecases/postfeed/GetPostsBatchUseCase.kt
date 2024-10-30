@@ -1,5 +1,6 @@
 package com.az.elib.domain.usecases.postfeed
 
+import android.util.Log
 import com.az.elib.data.repository.RepositoryFeed
 import com.google.firebase.firestore.DocumentSnapshot
 import javax.inject.Inject
@@ -15,6 +16,7 @@ class GetPostsBatchUseCase @Inject constructor(
                 repositoryFeed.getNextPostsBatch(lastVisitedDocument).getOrThrow()
             Result.success(docsSnapshots)
         } catch (e: Exception) {
+            Log.e("error_occuring", e.stackTraceToString())
             Result.failure(e)
         }
     }

@@ -11,9 +11,9 @@ import androidx.viewpager2.widget.ViewPager2
 import com.az.elib.R
 import com.az.elib.databinding.ActivityHomeBinding
 import com.az.elib.presentation.adapters.MyPagerAdapter
-import com.az.elib.presentation.viewmodels.ViewModelFeed
-import com.az.elib.presentation.ui.fragments.LibraryFragment
 import com.az.elib.presentation.ui.fragments.FeedFragment
+import com.az.elib.presentation.ui.fragments.LibraryFragment
+import com.az.elib.presentation.viewmodels.ViewModelFeed
 import com.az.elib.util.Constants
 import com.az.elib.util.CustomSnackBar
 import com.az.elib.util.NavigationMenuIconManager
@@ -38,7 +38,7 @@ class HomeActivity : BaseActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         customizeSystemBars(binding.main.id, ContextCompat.getColor(this@HomeActivity, R.color.colorPrimaryDark))
-        setNavigationBarColor(ContextCompat.getColor(this@HomeActivity, R.color.colorPrimaryDark))
+        setNavigationBarColor(ContextCompat.getColor(this@HomeActivity, R.color.colorSecondaryDark))
         customSnackBar = CustomSnackBar(binding.root, this@HomeActivity)
         setStatusBarLight(false)
         setBottomNavigationFunctionality()

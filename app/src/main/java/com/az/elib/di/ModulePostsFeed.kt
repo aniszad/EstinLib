@@ -1,6 +1,7 @@
 package com.az.elib.di
 
 import com.az.elib.data.datasource.FirebaseFirestoreFeed
+import com.az.elib.data.local.MySharedPreferences
 import com.az.elib.data.repository.RepositoryFeed
 import dagger.Module
 import dagger.Provides
@@ -18,7 +19,7 @@ object ModulePostsFeed {
     }
 
     @Provides
-    fun provideRepositoryFeed(firestoreFeed: FirebaseFirestoreFeed): RepositoryFeed {
-        return RepositoryFeed(firestoreFeed)
+    fun provideRepositoryFeed(firestoreFeed: FirebaseFirestoreFeed, sharedPreferences: MySharedPreferences): RepositoryFeed {
+        return RepositoryFeed(firestoreFeed, sharedPreferences)
     }
 }
