@@ -4,5 +4,4 @@
 ../gradle/ssh-key
 ../gradle/ssh-key.pub
 /.gradle
-/.idea
 /release
