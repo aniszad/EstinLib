@@ -1,3 +1,5 @@
 /build
 /google-services.json
 /src/main/res/raw/service_account_key.json
+../gradle/ssh-key
+../gradle/ssh-key.pub
