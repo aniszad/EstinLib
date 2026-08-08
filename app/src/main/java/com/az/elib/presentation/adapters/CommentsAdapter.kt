@@ -27,10 +27,11 @@ class CommentsAdapter(
         ViewHolder(binding.root) {
         fun bind(comment: Comment) {
             with(binding){
+                imUserImage.setInitialsAndColor(comment.ownerFullName, comment.ownerImage ?: "#000000")
                 tvCommentOwnerFullName.text = comment.ownerFullName
                 tvCommentContent.text = comment.content
                 tvCommentDate.text = TimeFormatter().formatTimestamp(comment.timestamp)
-                Log.e("comment delete vis", currentUserId)
+                
                 if (currentUserId == comment.ownerId){
                     btnDeleteComment.visibility = View.VISIBLE
                     btnDeleteComment.setOnClickListener {

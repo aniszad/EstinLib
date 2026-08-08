@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -536,120 +535,38 @@ class LibraryFragment : Fragment(), OnCourseClickedListener {
     private fun setupButtons() {
         binding.apply {
             includedLayoutPreparatoryCycle.apply {
-                btn1cp1semester.apply {
-                    setOnClickListener {
-                        updateView(rv1cpSemester1, CP1S1)
-                        icon = ContextCompat.getDrawable(
-                            requireContext(),
-                            if (showState[CP1S1]!!) R.drawable.icon_drop_down_arrow else R.drawable.icon_arrow_drop_up
-                        )
-                    }
-                }
-                btn1cp2semester.apply {
-                    setOnClickListener {
-                        updateView(rv1cpSemester2, CP1S2)
-                        icon = ContextCompat.getDrawable(
-                            requireContext(),
-                            if (showState[CP1S2]!!) R.drawable.icon_drop_down_arrow else R.drawable.icon_arrow_drop_up
-                        )
-                    }
-                }
-                btn2cp1semester.apply {
-                    setOnClickListener {
-                        updateView(rv2cpSemester1, CP2S1)
-                        icon = ContextCompat.getDrawable(
-                            requireContext(),
-                            if (showState[CP2S1]!!) R.drawable.icon_drop_down_arrow else R.drawable.icon_arrow_drop_up
-                        )
-                    }
-                }
-                btn2cp2semester.apply {
-                    setOnClickListener {
-                        updateView(rv2cpSemester2, CP2S2)
-                        icon = ContextCompat.getDrawable(
-                            requireContext(),
-                            if (showState[CP2S2]!!) R.drawable.icon_drop_down_arrow else R.drawable.icon_arrow_drop_up
-                        )
-                    }
-                }
+                btn1cp1semester.setOnClickListener { handleSemesterClick(it as com.google.android.material.button.MaterialButton, rv1cpSemester1, CP1S1) }
+                btn1cp2semester.setOnClickListener { handleSemesterClick(it as com.google.android.material.button.MaterialButton, rv1cpSemester2, CP1S2) }
+                btn2cp1semester.setOnClickListener { handleSemesterClick(it as com.google.android.material.button.MaterialButton, rv2cpSemester1, CP2S1) }
+                btn2cp2semester.setOnClickListener { handleSemesterClick(it as com.google.android.material.button.MaterialButton, rv2cpSemester2, CP2S2) }
             }
             includedLayoutSuperiorCycle.apply {
-                btn1cs1semester.apply {
-                    setOnClickListener {
-                        updateView(rv1csSemester1, CS1S1)
-                        icon = ContextCompat.getDrawable(
-                            requireContext(),
-                            if (showState[CP1S1]!!) R.drawable.icon_drop_down_arrow else R.drawable.icon_arrow_drop_up
-                        )
-                    }
-                }
-                btn1cs2semester.apply {
-                    setOnClickListener {
-                        updateView(rv1csSemester2, CS1S2)
-                        icon = ContextCompat.getDrawable(
-                            requireContext(),
-                            if (showState[CP1S2]!!) R.drawable.icon_drop_down_arrow else R.drawable.icon_arrow_drop_up
-                        )
-                    }
-                }
-                btn2cs1semester.apply {
-                    setOnClickListener {
-                        updateView(rv2csSemester1, CS2S1)
-                        icon = ContextCompat.getDrawable(
-                            requireContext(),
-                            if (showState[CP2S1]!!) R.drawable.icon_drop_down_arrow else R.drawable.icon_arrow_drop_up
-                        )
-                    }
-                }
-                btn2cs2semesterAi.apply {
-                    setOnClickListener {
-                        updateView(rv2csSemester2Ai, CS2S2AI)
-                        icon = ContextCompat.getDrawable(
-                            requireContext(),
-                            if (showState[CP2S2]!!) R.drawable.icon_drop_down_arrow else R.drawable.icon_arrow_drop_up
-                        )
-                    }
-                }
-                btn2cs2semesterCs.apply {
-                    setOnClickListener {
-                        updateView(rv2csSemester2Cs, CS2S2CS)
-                        icon = ContextCompat.getDrawable(
-                            requireContext(),
-                            if (showState[CP2S2]!!) R.drawable.icon_drop_down_arrow else R.drawable.icon_arrow_drop_up
-                        )
-                    }
-                }
-                btn3cs1semesterAi.apply {
-                    setOnClickListener {
-                        Toast.makeText(requireContext(), "Coming soon", Toast.LENGTH_SHORT).show()
-//                        updateView(rv3csSemester1Ai, CS3S1AI)
-//                        icon = ContextCompat.getDrawable(
-//                            requireContext(),
-//                            if (showState[CP2S2]!!) R.drawable.icon_drop_down_arrow else R.drawable.icon_arrow_drop_up
-//                        )
-                    }
-                }
-                btn3cs1semesterCs.apply {
-                    setOnClickListener {
-                        Toast.makeText(requireContext(), "Coming soon", Toast.LENGTH_SHORT).show()
-//                        updateView(rv3csSemester1Cs, CS3S1CS)
-//                        icon = ContextCompat.getDrawable(
-//                            requireContext(),
-//                            if (showState[CP2S2]!!) R.drawable.icon_drop_down_arrow else R.drawable.icon_arrow_drop_up
-//                        )
-                    }
-                }
+                btn1cs1semester.setOnClickListener { handleSemesterClick(it as com.google.android.material.button.MaterialButton, rv1csSemester1, CS1S1) }
+                btn1cs2semester.setOnClickListener { handleSemesterClick(it as com.google.android.material.button.MaterialButton, rv1csSemester2, CS1S2) }
+                btn2cs1semester.setOnClickListener { handleSemesterClick(it as com.google.android.material.button.MaterialButton, rv2csSemester1, CS2S1) }
+                btn2cs2semesterAi.setOnClickListener { handleSemesterClick(it as com.google.android.material.button.MaterialButton, rv2csSemester2Ai, CS2S2AI) }
+                btn2cs2semesterCs.setOnClickListener { handleSemesterClick(it as com.google.android.material.button.MaterialButton, rv2csSemester2Cs, CS2S2CS) }
+                btn3cs1semesterAi.setOnClickListener { handleSemesterClick(it as com.google.android.material.button.MaterialButton, rv3csSemester1Ai, CS3S1AI) }
+                btn3cs1semesterCs.setOnClickListener { handleSemesterClick(it as com.google.android.material.button.MaterialButton, rv3csSemester1Cs, CS3S1CS) }
             }
         }
     }
-    private fun updateView(recyclerView: RecyclerView, showStateKey: String) {
-        val isShowing = showState[showStateKey]!!
+
+    private fun handleSemesterClick(button: com.google.android.material.button.MaterialButton, recyclerView: RecyclerView, stateKey: String) {
+        if (stateKey == CS3S1AI || stateKey == CS3S1CS) {
+            Toast.makeText(requireContext(), "Coming soon", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
+        val isShowing = showState[stateKey] ?: false
         if (isShowing) {
             rvSlideAnimator.collapseView(recyclerView)
-            showState[showStateKey] = false
+            button.setIconResource(R.drawable.icon_drop_down_arrow)
+            showState[stateKey] = false
         } else {
             rvSlideAnimator.expandView(recyclerView)
-            showState[showStateKey] = true
+            button.setIconResource(R.drawable.icon_arrow_drop_up)
+            showState[stateKey] = true
         }
     }
     override fun onCourseClicked(driveFolderId: String, driveFolderName: String) {

@@ -9,5 +9,6 @@ data class Comment (
     val postId: String,
     val content: String,
     val ownerFullName: String,
+    val ownerImage: String? = null,
     val timestamp: Timestamp = Timestamp.now()
 )

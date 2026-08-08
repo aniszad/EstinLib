@@ -59,8 +59,8 @@ class ModelMapper {
                 postId = document.get("postId") as String,
                 content = document.get("content") as String,
                 ownerFullName = document.get("ownerFullName") as String,
+                ownerImage = document.get("ownerImage") as String?,
                 timestamp =document.get("timestamp") as Timestamp
-
             )
             commentsList.add(comment)
         }

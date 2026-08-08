@@ -30,8 +30,8 @@ class SignUpUseCase @Inject constructor(
             val email = inputChecker.extractEmail(userEmail)
             val password = inputChecker.extractPsw(userPsw)
 
-            val duplicateExists = repositoryFirestore.checkUsernameDuplicate(email)
-            if (duplicateExists) {
+            val duplicateExists = repositoryAuth.userExists(email)
+            if (duplicateExists.getOrDefault(false)) {
                 throw Exception("Username already exists")
             }
             authResult = repositoryAuth.signUp(email, password)

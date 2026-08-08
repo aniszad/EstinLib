@@ -40,8 +40,7 @@ import com.tbuonomo.viewpagerdotsindicator.DotsIndicator
 class FeedAdapter(
     private val context: Context,
     private val currentUserId: String,
-    var posts: MutableList<Post>,
-    private val firstEmptyElementSize: Int
+    var posts: MutableList<Post>
 ) :
     RecyclerView.Adapter<ViewHolder>() {
     private var onPostReplyClickListener: OnPostReplyClickListener? = null
@@ -59,7 +58,6 @@ class FeedAdapter(
 
     companion object {
         private const val POSTS_VIEW_HOLDER = 0
-        private const val TOOLBAR_EMPTY_SPACE_VIEW_HOLDER = 1
         private const val LOAD_MORE_BUTTON_VIEW_HOLDER = 2
         private const val LOADING_BAR_VIEW_HOLDER = 3
     }
@@ -75,12 +73,11 @@ class FeedAdapter(
         val dotsIndicator = postLayoutBinding.dotsIndicator
         val btnReply = postLayoutBinding.btnReply
         val btnMore = postLayoutBinding.btnMore
-        val tvTime = postLayoutBinding.tvTime
         val btnReact = postLayoutBinding.btnReact as LikeButton
         val tvReactCount = postLayoutBinding.tvReactCount
         val btnComment = postLayoutBinding.btnComment
+        val llLike = postLayoutBinding.llLike
         val imUser = postLayoutBinding.imUserImage as InitialsAvatarView
-
     }
 
     inner class LoadMoreButtonViewHolder(loadMoreBinding: LayoutLoadMorePostsBinding) :
@@ -88,17 +85,14 @@ class FeedAdapter(
         val btnLoadMorePosts = loadMoreBinding.btnLoadMore
     }
 
-    inner class ToolbarEmptySpaceViewHolder(view: View) : ViewHolder(view)
-
     inner class LoadingViewHolder(binding: LoadingLayoutBinding) : ViewHolder(binding.root)
 
     override fun getItemViewType(position: Int): Int {
-        if (position==1 && isLoading) {
+        if (isLoading) {
             return LOADING_BAR_VIEW_HOLDER
         }
         return when (position) {
-            0 -> TOOLBAR_EMPTY_SPACE_VIEW_HOLDER
-            posts.size + 1 -> LOAD_MORE_BUTTON_VIEW_HOLDER
+            posts.size -> LOAD_MORE_BUTTON_VIEW_HOLDER
             else -> POSTS_VIEW_HOLDER
         }
     }
@@ -135,103 +129,84 @@ class FeedAdapter(
                 )
             }
 
-            else -> {
-
-                val actionBarSize = firstEmptyElementSize
-                val emptySpace = View(parent.context)
-                emptySpace.layoutParams = ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    actionBarSize
-                )
-                ToolbarEmptySpaceViewHolder(emptySpace)
-            }
+            else -> throw IllegalArgumentException("Unknown view type")
         }
     }
 
     override fun getItemCount(): Int {
-        return if (showLoadMoreButton) posts.size + 2 else posts.size + 1
+        return if (showLoadMoreButton) posts.size + 1 else posts.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         when (holder) {
             is PostViewHolder -> {
-                val currentPost = posts[position - 1]
+                val currentPost = posts[position]
                 holder.apply {
                     imUser.setInitialsAndColor(
-                        currentPost.ownerFirstName + " " + currentPost.ownerLastName,
+                        "${currentPost.ownerFirstName} ${currentPost.ownerLastName}",
                         currentPost.ownerImage ?: "#000000"
                     )
-                    tvReactCount.text =
-                        ReactionCountFormatter.formatReactionCount(currentPost.postReactCount)
+                    
+                    tvReactCount.text = ReactionCountFormatter.formatReactionCount(currentPost.postReactCount)
                     isLiked = currentPost.postLikesIds.contains(currentUserId)
                     btnReact.setLiked(isLiked, false)
-                    btnReact.onLikeChanged = { liked ->
-                        if (liked) {
-                            tvReactCount.text =
-                                ReactionCountFormatter.decrement(tvReactCount.text.toString())
-                        } else {
-                            tvReactCount.text =
-                                ReactionCountFormatter.increment(tvReactCount.text.toString())
-                        }
-                        if (liked) onReactClickListener?.removeReaction(
-                            currentPost.id,
-                            posts.indexOf(currentPost)
-                        )
-                         else onReactClickListener?.addReaction(
-                        currentPost.id,
-                        posts.indexOf(currentPost))
+                    tvReactCount.setTextColor(ContextCompat.getColor(context, if (isLiked) R.color.colorPrimaryAccent else R.color.colorTextGray))
+                    
+                    llLike?.setOnClickListener {
+                        btnReact.reverseLiked()
                     }
-                    btnComment.setOnClickListener {
+
+                    btnReact.onLikeChanged = { liked ->
+                        val isNowLiked = !liked // liked param is the OLD state in toggle()
+                        if (isNowLiked) {
+                            tvReactCount.text = ReactionCountFormatter.increment(tvReactCount.text.toString())
+                            tvReactCount.setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryAccent))
+                            onReactClickListener?.addReaction(currentPost.id, position)
+                        } else {
+                            tvReactCount.text = ReactionCountFormatter.decrement(tvReactCount.text.toString())
+                            tvReactCount.setTextColor(ContextCompat.getColor(context, R.color.colorTextGray))
+                            onReactClickListener?.removeReaction(currentPost.id, position)
+                        }
+                    }
+
+                    btnComment?.setOnClickListener {
                         onPostCommentClickedListener?.onPostCommentClicked(currentPost.id)
                     }
 
-                    tvFullName.text = buildString {
-                        append(currentPost.ownerFirstName)
-                        append(" ")
-                        append(currentPost.ownerLastName)
+                    btnReply?.setOnClickListener {
+                        onPostReplyClickListener?.onReplyClicked(currentPost.ownerEmail, currentPost.tag ?: "")
                     }
-                    tvAboutUser.text = currentPost.ownerYear
-                    tvPostTag.text = currentPost.tag
-                    if (currentPost.tag.isNullOrEmpty()) tvPostTag.visibility = View.GONE
-                    else tvPostTag.visibility = View.VISIBLE
+
+                    tvFullName.text = "${currentPost.ownerFirstName} ${currentPost.ownerLastName}"
+                    
+                    val timeAgo = timeFormatter.formatTimestamp(currentPost.timestamp)
+                    tvAboutUser.text = "${currentPost.ownerYear} • $timeAgo"
+                    
+                    tvPostTag.text = currentPost.tag?.uppercase()
+                    tvPostTag.visibility = if (currentPost.tag.isNullOrEmpty()) View.GONE else View.VISIBLE
+                    
                     if (currentPost.postContent.isNotEmpty()) {
                         tvPostContent.visibility = View.VISIBLE
                         tvPostContent.text = currentPost.postContent
                     } else {
                         tvPostContent.visibility = View.GONE
                     }
+
                     if (currentPost.postImageAttachments.isNotEmpty()) {
                         viewPagerImagesAttachments.visibility = View.VISIBLE
                         dotsIndicator.visibility = View.VISIBLE
-                        setViewPagerImages(
-                            viewPagerImagesAttachments,
-                            currentPost.postImageAttachments,
-                            dotsIndicator,
-                            btnReact
-                        )
-
+                        setViewPagerImages(viewPagerImagesAttachments, currentPost.postImageAttachments, dotsIndicator, btnReact)
                     } else {
                         viewPagerImagesAttachments.visibility = View.GONE
                         dotsIndicator.visibility = View.GONE
                     }
-                    btnReply.setOnClickListener {
-                        this@FeedAdapter.onPostReplyClickListener?.onReplyClicked(
-                            currentPost.ownerEmail,
-                            currentPost.tag ?: ""
-                        )
-                    }
-                    if (currentUserId == currentPost.ownerId) {
-                        btnMore?.visibility = View.VISIBLE
-                        btnMore?.setOnClickListener {
-                            showPostOptionsPopupMenu(it, currentPost.id)
-                        }
-                    } else {
-                        btnMore?.visibility = View.GONE
-                        btnMore?.setOnClickListener(null)
-                    }
-                    tvTime.text = timeFormatter.formatTimestamp(currentPost.timestamp)
-                    if (currentPost.tag == Constants.EVENT) animate(holder.cardView)
 
+                    btnMore?.visibility = if (currentUserId == currentPost.ownerId) View.VISIBLE else View.GONE
+                    btnMore?.setOnClickListener {
+                        showPostOptionsPopupMenu(it, currentPost.id)
+                    }
+
+                    if (currentPost.tag == Constants.EVENT) animate(cardView)
                 }
             }
 
@@ -331,18 +306,8 @@ class FeedAdapter(
         }
     }
 
-    fun hideLoadMorePostsButton() {
-        showLoadMoreButton = false
-        notifyItemChanged(posts.size + 1)
-    }
-
-    fun showLoadMorePostsButton() {
-        showLoadMoreButton = true
-        notifyItemChanged(posts.size + 1)
-    }
-
     fun getPositionFromId(postIdFromNotification: String?): Int {
-        return this.posts.indexOfFirst { it.id == postIdFromNotification } + 1
+        return this.posts.indexOfFirst { it.id == postIdFromNotification }
     }
 
     fun updatePostRemoved(postId: String?) {
@@ -350,7 +315,7 @@ class FeedAdapter(
         val position = this.posts.indexOfFirst { it.id == postId }
         if (position != -1) {
             this.posts.removeAt(position)
-            notifyItemRemoved(position + 1)
+            notifyItemRemoved(position)
         }
     }
 
@@ -371,6 +336,16 @@ class FeedAdapter(
 
     fun canFetchMore(): Boolean {
         return showLoadMoreButton
+    }
+
+    fun hideLoadMorePostsButton() {
+        showLoadMoreButton = false
+        notifyItemChanged(posts.size)
+    }
+
+    fun showLoadMorePostsButton() {
+        showLoadMoreButton = true
+        notifyItemChanged(posts.size)
     }
 
 

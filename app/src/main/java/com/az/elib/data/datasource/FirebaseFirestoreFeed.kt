@@ -24,8 +24,9 @@ class FirebaseFirestoreFeed {
 
     suspend fun getNextPostsBatch(lastVisited: DocumentSnapshot?, channel : String): Result<List<DocumentSnapshot>> {
         return try {
+            val channelsToQuery = listOf(channel, "All")
             var query = db.collection(FIREBASE_PUBLISHED_POSTS_COLLECTION)
-                .whereEqualTo(CHANNEL_FIELD, channel)
+                .whereIn(CHANNEL_FIELD, channelsToQuery)
                 .orderBy(ORDER_BY_FIELD, Query.Direction.DESCENDING)
                 .limit(POSTS_BATCH)
             if (lastVisited != null) {

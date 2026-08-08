@@ -94,12 +94,12 @@ class FirebaseAuth {
     }
 
     suspend fun userExists(email: String): Result<Boolean> {
-        val result = auth.fetchSignInMethodsForEmail(email).await()
-        val userExists = result.signInMethods?.isNotEmpty() ?: false
-        return if (userExists) {
-            Result.success(true)
-        } else {
-            Result.failure(Exception("User not found"))
+        return try {
+            val result = auth.fetchSignInMethodsForEmail(email).await()
+            val userExists = result.signInMethods?.isNotEmpty() ?: false
+            Result.success(userExists)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 

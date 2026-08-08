@@ -1,52 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view_course"
     android:layout_width="match_parent"
-    android:layout_margin="@dimen/_4sdp"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/card_view_course"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        >
+    android:layout_margin="6dp"
+    app:cardBackgroundColor="@color/colorSecondaryDark"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    app:strokeWidth="0dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/im_course"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/im_architecture"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/card_top_radius" />
+
+        <TextView
+            android:id="@+id/tv_course_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            >
-                <ImageView
-                    android:id="@+id/im_course"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_100sdp"
-                    android:scaleType="centerCrop"
-                    android:maxHeight="@dimen/_140sdp"
-                    android:adjustViewBounds="true"
-                    android:src="@drawable/im_architecture"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/tv_course_title"
-                    />
+            android:fontFamily="@font/manrope_semi_bold"
+            android:minLines="2"
+            android:padding="12dp"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            app:layout_constraintTop_toBottomOf="@id/im_course"
+            tools:text="Computer Architecture 1" />
 
-            <TextView
-                android:id="@+id/tv_course_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/_10ssp"
-                android:maxEms="8"
-                android:padding="@dimen/_8sdp"
-                android:fontFamily="@font/manrope_semi_bold"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/im_course"
-                app:layout_constraintEnd_toEndOf="@id/im_course"
-                app:layout_constraintStart_toStartOf="@id/im_course" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

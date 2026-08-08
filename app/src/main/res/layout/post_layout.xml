@@ -1,248 +1,238 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:tools="http://schemas.android.com/tools"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/cardView"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginVertical="@dimen/_8sdp"
-    app:strokeWidth="@dimen/_1sdp"
-    app:strokeColor="@color/colorTextGray"
-    app:cardCornerRadius="@dimen/_12sdp"
-    android:backgroundTint="@color/colorSecondaryDark"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_marginHorizontal="12dp"
+    android:layout_marginVertical="8dp"
+    app:cardBackgroundColor="@color/colorSecondaryDark"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="2dp"
+    app:strokeWidth="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/_12sdp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:paddingTop="16dp">
 
-        <LinearLayout
-            android:id="@+id/ll_user_name_n_type"
-            android:layout_width="match_parent"
+        <!-- Header Section -->
+        <com.az.elib.presentation.ui.custom.InitialsAvatarView
+            android:id="@+id/im_user_image"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_full_name"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_8sdp"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toTopOf="parent"
-            >
-            <com.az.elib.presentation.ui.custom.InitialsAvatarView
-                android:id="@+id/im_user_image"
-                android:layout_width="@dimen/_32sdp"
-                android:layout_height="@dimen/_32sdp"
-                android:layout_marginStart="4dp"
-                android:maxWidth="@dimen/_48sdp"
-                android:maxHeight="@dimen/_32sdp"
-                />
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/manrope_bold"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toStartOf="@id/tv_post_tag"
+            app:layout_constraintStart_toEndOf="@id/im_user_image"
+            app:layout_constraintTop_toTopOf="@id/im_user_image"
+            tools:text="Anis Amine" />
 
-                <TextView
-                    android:id="@+id/tv_full_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:fontFamily="@font/manrope_bold"
-                    android:maxLines="2"
-                    android:maxWidth="@dimen/_135sdp"
-                    android:paddingStart="6dp"
-                    android:paddingEnd="5dp"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_11ssp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/ll_user_name_n_type" />
+        <TextView
+            android:id="@+id/tv_about_user"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:fontFamily="@font/manrope_medium"
+            android:textColor="@color/colorTextGray"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@id/tv_full_name"
+            app:layout_constraintStart_toStartOf="@id/tv_full_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_full_name"
+            tools:text="2nd Year • 2h ago" />
 
-                <TextView
-                    android:id="@+id/tv_about_user"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/manrope_medium"
-                    android:paddingStart="12dp"
-                    android:paddingEnd="5dp"
-                    android:text="@string/_1cp"
-                    android:textColor="@color/colorTextGray"
-                    android:textSize="@dimen/_9ssp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/ll_user_name_n_type" />
-            </LinearLayout>
+        <TextView
+            android:id="@+id/tv_post_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/gray_backg_with_radius"
+            android:fontFamily="@font/manrope_bold"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
+            android:textColor="@color/colorPrimaryAccent"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_full_name"
+            app:layout_constraintEnd_toStartOf="@id/btn_more"
+            app:layout_constraintTop_toTopOf="@id/tv_full_name"
+            tools:text="ASSIGNMENT" />
 
-            <TextView
-                android:id="@+id/tv_post_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/badge_background"
-                android:fontFamily="@font/manrope_semi_bold"
-                android:maxLines="5"
-                android:paddingHorizontal="@dimen/_5sdp"
-                android:paddingVertical="@dimen/_2sdp"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_9ssp" />
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:orientation="horizontal"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    >
-                    <LinearLayout
-                        android:id="@+id/btn_reply"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        >
-                        <ImageButton
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:background="@android:color/transparent"
-                            android:contentDescription="@string/reply_icon"
-                            android:padding="0dp"
-                            android:src="@drawable/icon_reply"
-                            android:textAlignment="textStart"
-                            android:textAllCaps="false"
-                            app:iconSize="@dimen/_15sdp"
-                            tools:ignore="TouchTargetSizeCheck" />
-                        <TextView
-                            android:id="@+id/tv_reply"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/reply"
-                            android:gravity="center"
-                            android:padding="@dimen/_2sdp"
-                            android:textSize="@dimen/_9ssp"
-                            android:fontFamily="@font/manrope_medium"
-                            />
-                    </LinearLayout>
+        <ImageButton
+            android:id="@+id/btn_more"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/icon_more"
+            app:layout_constraintBottom_toBottomOf="@id/im_user_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/im_user_image"
+            app:tint="@color/colorTextGray" />
 
-                    <ImageButton
-                        android:id="@+id/btn_more"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:background="@android:color/transparent"
-                        android:contentDescription="@string/reply_icon"
-                        android:padding="0dp"
-                        android:paddingEnd="@dimen/_2sdp"
-                        android:paddingStart="@dimen/_4sdp"
-                        android:src="@drawable/icon_more"
-                        android:textAlignment="textStart"
-                        android:textAllCaps="false"
-                        app:iconSize="@dimen/_15sdp"
-                        tools:ignore="TouchTargetSizeCheck" />
-                </LinearLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        </LinearLayout>
-
+        <!-- Content Section -->
         <TextView
             android:id="@+id/tv_post_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/_8sdp"
-            android:layout_marginHorizontal="@dimen/_8sdp"
-            android:fontFamily="@font/manrope_medium"
-            android:padding="5dp"
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/manrope_regular"
+            android:lineSpacingMultiplier="1.2"
+            android:paddingHorizontal="16dp"
             android:textColor="@color/white"
-            android:textSize="@dimen/_10ssp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/view_pager_images_attachments"
-            app:layout_constraintTop_toBottomOf="@id/ll_user_name_n_type" />
+            android:textSize="15sp"
+            app:layout_constraintTop_toBottomOf="@id/im_user_image"
+            tools:text="This is a professional post content that looks very good in the new feed design." />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager_images_attachments"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxHeight="@dimen/_230sdp"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:nestedScrollingEnabled="true"
-            app:layout_constraintBottom_toTopOf="@id/dots_indicator"
-            app:layout_constraintTop_toBottomOf="@id/tv_post_content"
-            />
+            android:layout_marginTop="12dp"
+            android:minHeight="200dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_post_content" />
 
         <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
             android:id="@+id/dots_indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:dotsColor="@color/colorTextGray"
             app:dotsCornerRadius="8dp"
-            app:dotsSize="@dimen/_4sdp"
-            app:dotsSpacing="@dimen/_2sdp"
+            app:dotsSize="6dp"
+            app:dotsSpacing="3dp"
             app:dotsWidthFactor="2.5"
-            app:dotsColor="@color/black"
-            app:selectedDotColor="@color/white"
-            app:progressMode="true"
-            android:layout_marginVertical="@dimen/_6sdp"
-            app:layout_constraintBottom_toTopOf="@id/cl_interaction"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view_pager_images_attachments"
-            />
+            app:progressMode="true"
+            app:selectedDotColor="@color/colorPrimaryAccent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <!-- Footer / Interaction Section -->
+        <View
+            android:id="@+id/v_footer_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginHorizontal="16dp"
+            android:alpha="0.1"
+            android:background="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/dots_indicator" />
+
+        <LinearLayout
             android:id="@+id/cl_interaction"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:paddingVertical="@dimen/_12sdp"
-            android:layout_marginHorizontal="@dimen/_6sdp"
-            app:layout_constraintTop_toBottomOf="@id/dots_indicator">
+            android:layout_height="52dp"
+            android:baselineAligned="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="8dp"
+            app:layout_constraintTop_toBottomOf="@id/v_footer_divider">
 
-            <com.az.elib.presentation.ui.custom.LikeButton
-                android:id="@+id/btn_react"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/icon_heart_outline"
-                android:layout_marginHorizontal="@dimen/_8sdp"
-                android:background="@android:color/transparent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                />
-            <TextView
-                android:id="@+id/tv_react_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textSize="@dimen/_9ssp"
-                android:paddingHorizontal="@dimen/_4sdp"
-                app:layout_constraintTop_toTopOf="@id/btn_react"
-                app:layout_constraintBottom_toBottomOf="@id/btn_react"
-                app:layout_constraintStart_toEndOf="@id/btn_react"
-                />
-            <ImageButton
+            <LinearLayout
+                android:id="@+id/ll_like"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.az.elib.presentation.ui.custom.LikeButton
+                    android:id="@+id/btn_react"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:padding="2dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/icon_heart_outline" />
+
+                <TextView
+                    android:id="@+id/tv_react_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:fontFamily="@font/manrope_bold"
+                    android:includeFontPadding="false"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="13sp"
+                    tools:text="12" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/btn_comment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/icon_comment"
-                android:layout_marginHorizontal="@dimen/_8sdp"
-                android:background="@android:color/transparent"
-                app:layout_constraintStart_toEndOf="@id/tv_react_count"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                />
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="horizontal">
 
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:padding="2dp"
+                    android:src="@drawable/icon_comment"
+                    app:tint="@color/colorTextGray" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:textSize="@dimen/_9ssp"
-                app:layout_constraintEnd_toEndOf="parent"
-                />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:fontFamily="@font/manrope_bold"
+                    android:includeFontPadding="false"
+                    android:text="Comment"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="13sp" />
+            </LinearLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <LinearLayout
+                android:id="@+id/btn_reply"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:padding="2dp"
+                    android:src="@drawable/icon_reply"
+                    app:tint="@color/colorTextGray" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:fontFamily="@font/manrope_bold"
+                    android:includeFontPadding="false"
+                    android:text="Reply"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>

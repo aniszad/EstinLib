@@ -3,7 +3,6 @@ package com.az.elib.presentation.viewmodels
 import android.content.Context
 import android.net.Uri
 import android.util.Log
-import android.widget.EditText
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -39,35 +38,61 @@ class ViewModelCreatePost @Inject constructor(
     private val _sendNotificationResult = MutableStateFlow<Result<String>?>(null)
     val sendNotificationResult: StateFlow<Result<String>?> = _sendNotificationResult
 
-    private val _attachList = MutableStateFlow<HashMap<String, Uri>>(hashMapOf())
-    val attachList: StateFlow<HashMap<String, Uri>> = _attachList
+    private val _attachList = MutableStateFlow<List<Pair<String, Uri>>>(emptyList())
+    val attachList: StateFlow<List<Pair<String, Uri>>> = _attachList
 
-    fun createPostAndNotification(postContentEditText: EditText) = viewModelScope.launch(Dispatchers.IO) {
-        val postCreatingResult = createPostUserCase.invoke(postContentEditText.text.toString(), tag.value, channel.value,_attachList.value)
-        Log.e("Notification", "${postCreatingResult.getOrNull() ?: return@launch}")
+    fun createPostAndNotification(content: String) = viewModelScope.launch(Dispatchers.IO) {
+        val attachmentsMap = HashMap<String, Uri>()
+        _attachList.value.forEach { attachmentsMap[it.first] = it.second }
+
+        val postCreatingResult = createPostUserCase.invoke(content, tag.value, channel.value, attachmentsMap)
         _postCreatingResult.value = postCreatingResult
-        if (postCreatingResult.isFailure) return@launch
-        val sendNotificationResult = sendNotificationUserCase.invoke(postCreatingResult.getOrNull() ?: return@launch)
-        _sendNotificationResult.value = sendNotificationResult
+        if (postCreatingResult.isSuccess) {
+            val sendNotificationResult = sendNotificationUserCase.invoke(postCreatingResult.getOrThrow())
+            _sendNotificationResult.value = sendNotificationResult
+        }
     }
 
-    fun compressAndAddFile(requireContext: Context, file: File) = viewModelScope.launch(Dispatchers.IO) {
-        val compressedUri = Compressor.compress(requireContext, file) {
-            quality(70)
+    fun addFiles(context: Context, uris: List<Uri>) = viewModelScope.launch(Dispatchers.IO) {
+        uris.forEachIndexed { index, uri ->
+            try {
+                val extension = context.contentResolver.getType(uri)?.substringAfterLast("/") ?: "jpg"
+                val fileName = "img_${System.currentTimeMillis()}_${index}.$extension"
+                
+                val inputStream = context.contentResolver.openInputStream(uri)
+                val tempFile = File(context.cacheDir, fileName)
+                tempFile.outputStream().use { output ->
+                    inputStream?.copyTo(output)
+                }
+                
+                val compressedFile = Compressor.compress(context, tempFile) {
+                    quality(70)
+                }
+                
+                addToAttachList(fileName, compressedFile.toUri())
+                tempFile.delete() // Clean up temp file
+            } catch (e: Exception) {
+                Log.e("ViewModelCreatePost", "Error adding file: ${e.message}")
+            }
         }
-        addToAttachList(file.name, compressedUri.toUri())
     }
 
     private fun addToAttachList(key: String, uri: Uri) = viewModelScope.launch(Dispatchers.Main) {
-        _attachList.value = _attachList.value.toMutableMap().apply { put(key, uri) } as HashMap<String, Uri>
+        val currentList = _attachList.value.toMutableList()
+        currentList.add(Pair(key, uri))
+        _attachList.value = currentList
     }
 
-    fun removeFromAttachList(attach: String) {
-        _attachList.value = _attachList.value.toMutableMap().apply { remove(attach) } as HashMap<String, Uri>
+    fun removeFromAttachList(fileName: String) {
+        val currentList = _attachList.value.toMutableList()
+        currentList.removeAll { it.first == fileName }
+        _attachList.value = currentList
     }
 
     fun clearData() {
-        _attachList.value = hashMapOf()
+        _attachList.value = emptyList()
+        _tag.value = null
+        _channel.value = null
     }
 
     fun setTag(tag: String) {

@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -26,10 +25,10 @@ import com.az.elib.domain.models.CommentsBatchState
 import com.az.elib.domain.models.CommentsUpdateType
 import com.az.elib.presentation.adapters.CommentsAdapter
 import com.az.elib.presentation.viewmodels.ViewModelComments
+import com.az.elib.presentation.ui.dialogs.ConfirmDialog
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -72,7 +71,8 @@ class CommentsFragment : BottomSheetDialogFragment(), OnDeleteCommentClickListen
                 bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             parentLayout?.let { view ->
                 val behaviour = BottomSheetBehavior.from(view)
-                behaviour.isDraggable = false
+                behaviour.state = BottomSheetBehavior.STATE_EXPANDED
+                behaviour.skipCollapsed = true
             }
         }
 
@@ -109,23 +109,16 @@ class CommentsFragment : BottomSheetDialogFragment(), OnDeleteCommentClickListen
     private fun setUiFunc() {
         with(binding) {
             etComment.addTextChangedListener { editable ->
-                if (editable.toString().isNotBlank()) {
-                    with(tilComment) {
-                        endIconDrawable =
-                            (ContextCompat.getDrawable(requireContext(), R.drawable.ic_send))
-                        endIconMode = TextInputLayout.END_ICON_CUSTOM
-                        setEndIconOnClickListener {
-                            isEndIconVisible = false
-                            val comment = etComment.text.toString()
-                            if (comment.isNotBlank()) viewModelComments.addComment(comment)
-                        }
-                    }
-                } else {
-                    tilComment.endIconDrawable = null
-                    tilComment.setEndIconOnClickListener(null)
+                btnSend.visibility = if (editable.toString().isNotBlank()) View.VISIBLE else View.GONE
+            }
+            
+            btnSend.setOnClickListener {
+                val comment = etComment.text.toString()
+                if (comment.isNotBlank()) {
+                    btnSend.isEnabled = false
+                    viewModelComments.addComment(comment)
                 }
             }
-
         }
     }
 
@@ -159,16 +152,15 @@ class CommentsFragment : BottomSheetDialogFragment(), OnDeleteCommentClickListen
                                     is CommentsUpdateType.Added -> {
                                         commentsAdapter?.addComment(commentBatchState.comments)
                                         binding.rvComments.smoothScrollToPosition(0)
-                                        binding.etComment.text.clear()
+                                        binding.etComment.text?.clear()
                                         binding.etComment.clearFocus()
-                                        binding.tilComment.isEndIconVisible = true
+                                        binding.btnSend.isEnabled = true
                                         dismissKeyboard()
-
                                     }
 
                                     is CommentsUpdateType.Deleted -> {
                                         commentsAdapter?.deleteComment(commentBatchState.comments)
-                                        binding.etComment.text.clear()
+                                        binding.etComment.text?.clear()
                                         binding.etComment.clearFocus()
                                         dismissKeyboard()
                                     }

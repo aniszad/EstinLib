@@ -10,18 +10,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.az.elib.databinding.FragmentFeedBinding
 import com.az.elib.domain.interfaces.OnDeletePostClickListener
 import com.az.elib.domain.interfaces.OnLoadMorePostsClickListener
@@ -32,7 +28,6 @@ import com.az.elib.domain.models.Post
 import com.az.elib.domain.models.PostsBatchState
 import com.az.elib.domain.models.PostsUpdateType
 import com.az.elib.presentation.adapters.FeedAdapter
-import com.az.elib.presentation.util.SystemBarsHeight
 import com.az.elib.presentation.viewmodels.ViewModelCreatePost
 import com.az.elib.presentation.viewmodels.ViewModelFeed
 import com.az.elib.presentation.ui.activities.SettingsActivity
@@ -50,11 +45,7 @@ class FeedFragment : Fragment(), OnPostReplyClickListener, OnLoadMorePostsClickL
     private val customSnackBar: CustomSnackBar by lazy {
         CustomSnackBar(binding.root, requireActivity())
     }
-    private val systemBarsHeight: SystemBarsHeight by lazy {
-        SystemBarsHeight(requireActivity())
-    }
     private var feedAdapter: FeedAdapter? = null
-    private var toolbarIsShowing = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,36 +61,7 @@ class FeedFragment : Fragment(), OnPostReplyClickListener, OnLoadMorePostsClickL
         getMostRecentPostsBatch()
         observeViewModelData()
         setToolbarFunctionality()
-        rvScrollStateListener()
         setupFeedAdapter(mutableListOf())
-    }
-
-    private fun rvScrollStateListener() {
-        binding.recyclerViewFeed.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                when {
-                    dy >= 3 -> if (toolbarIsShowing) hideToolbar()
-                    dy <= -2 -> if (!toolbarIsShowing) showToolbar()
-                }
-            }
-        })
-    }
-
-    private fun hideToolbar() {
-        val toolbarHeight = binding.toolbar.height
-        binding.toolbar.animate()
-            .translationY(-toolbarHeight.toFloat())
-            .setDuration(200) // Set your desired animation duration here
-            .start()
-        toolbarIsShowing = false
-    }
-
-    private fun showToolbar() {
-        binding.toolbar.animate()
-            .translationY(0f)
-            .setDuration(200) // Set your desired animation duration here
-            .start()
-        toolbarIsShowing = true
     }
 
     private fun setToolbarFunctionality() {
@@ -107,17 +69,6 @@ class FeedFragment : Fragment(), OnPostReplyClickListener, OnLoadMorePostsClickL
             btnSettings.setOnClickListener {
                 startActivity(Intent(requireActivity(), SettingsActivity::class.java))
             }
-            view?.viewTreeObserver?.addOnGlobalLayoutListener(object :
-                ViewTreeObserver.OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    val windowInsets =
-                        WindowInsetsCompat.toWindowInsetsCompat(view!!.rootWindowInsets)
-                    val statusBarHeight =
-                        windowInsets.getInsets(WindowInsetsCompat.Type.statusBars()).top
-                    binding.clToolbar.updatePadding(top = statusBarHeight)
-                    view?.viewTreeObserver?.removeOnGlobalLayoutListener(this)
-                }
-            })
             btnAddPost.setOnClickListener {
                 startActivity(Intent(requireActivity(), CreatePostActivity::class.java))
             }
@@ -243,8 +194,7 @@ class FeedFragment : Fragment(), OnPostReplyClickListener, OnLoadMorePostsClickL
         feedAdapter = FeedAdapter(
             requireContext(),
             viewModelFeed.getUserId(),
-            postsList,
-            systemBarsHeight.getSystemBarsHeight()
+            postsList
         )
         feedAdapter?.setOnPostReplyClickListener(this@FeedFragment)
         feedAdapter?.setOnLoadMorePostsClickListener(this@FeedFragment)

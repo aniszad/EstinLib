@@ -43,10 +43,10 @@ class FirebaseFirestoreAuth {
 
     suspend fun getUserData(userId: String): UserLocalData {
         Log.e("sign in", "userId: $userId")
-        val firebaseUser = db.collection("USERS").whereEqualTo("id", userId).get().await()
-        Log.e("sign in", "userId: ${firebaseUser.documents.toString()}")
+        val firebaseUser = db.collection("USERS").document(userId).get().await()
+        Log.e("sign in", "userData: ${firebaseUser.data}")
 
-        val user = modelMapper.mapUserToUserEntity(firebaseUser.documents[0].data)
+        val user = modelMapper.mapUserToUserEntity(firebaseUser.data)
         return user ?: throw Exception("User not found")
     }
 

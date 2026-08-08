@@ -9,6 +9,7 @@ import android.view.animation.AnimationUtils
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
@@ -19,8 +20,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.az.elib.R
 import com.az.elib.databinding.ActivityAuthBinding
 import com.az.elib.presentation.adapters.EstinGalleryRvAdapter
-import com.az.elib.presentation.viewmodels.ViewModelAuth
 import com.az.elib.presentation.ui.dialogs.ConfirmDialog
+import com.az.elib.presentation.viewmodels.ViewModelAuth
 import com.az.elib.util.CustomSnackBar
 import com.az.elib.util.GoogleSignInHelper
 import dagger.hilt.android.AndroidEntryPoint
@@ -54,9 +55,10 @@ class AuthActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAuthBinding.inflate(layoutInflater)
+        enableEdgeToEdge()
         setContentView(binding.root)
-        setNavigationBarColor(ContextCompat.getColor(this, R.color.colorPurple))
-        setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark))
+        customizeSystemBars(binding.main.id, ContextCompat.getColor(this@AuthActivity, R.color.colorPrimaryDark))
+        setNavigationBarColor(ContextCompat.getColor(this, R.color.colorSecondaryDark))
         setStatusBarLight(false)
         setEstinImagesGallery()
 
@@ -156,6 +158,7 @@ class AuthActivity : BaseActivity() {
                 }
                 launch {
                     viewModelAuth.signInWithGoogleResult.collect { result ->
+                        hideLoadingButton()
                         Log.e("google sign in ", "result: $result")
                         result?.let {
                             if (it.isSuccess) {
@@ -188,6 +191,7 @@ class AuthActivity : BaseActivity() {
                 }
                 launch {
                     viewModelAuth.signUpResult.collect { result ->
+                        hideLoadingButton()
                         result?.let {
                             if (it.isSuccess) {
                                 sendVerificationEmail()
@@ -233,10 +237,10 @@ class AuthActivity : BaseActivity() {
     private fun switchToConfirmVerification() {
         binding.apply {
             includeSignUpLayout.apply {
-                etLastNameSignUp.text.clear()
-                etFirstNameSignUp.text.clear()
-                etEmailSignUp.text.clear()
-                etPswSignUp.text.clear()
+                etLastNameSignUp.text?.clear()
+                etFirstNameSignUp.text?.clear()
+                etEmailSignUp.text?.clear()
+                etPswSignUp.text?.clear()
             }
         }
         binding.vfAuth.showNext()
@@ -258,17 +262,17 @@ class AuthActivity : BaseActivity() {
                     vfAuth.showNext()
                 }
                 etEmail.addTextChangedListener { editable ->
-                    viewModelAuth.setSignInEmail(editable.toString())
+                    viewModelAuth.setSignInEmail(editable?.toString().orEmpty())
                 }
                 etPsw.addTextChangedListener { editable ->
-                    viewModelAuth.setSignInPassword(editable.toString())
+                    viewModelAuth.setSignInPassword(editable?.toString().orEmpty())
                 }
                 tvForgotPsw.setOnClickListener {
-                    if (etEmail.text.isNotBlank()) {
+                    if (etEmail.text?.isNotBlank() == true) {
                         confirmDialog.showConfirmDialog(
                             "Proceed to send an email to the following address: ${etEmail.text}?",
                             R.drawable.ic_mail,
-                        ){sendResetPasswordEmail(etEmail.text.toString())}
+                        ){sendResetPasswordEmail(etEmail.text?.toString().orEmpty())}
                     } else {
                         customSnackBar.launchSnackBar("Please enter a valid email", true)
                     }
@@ -278,16 +282,16 @@ class AuthActivity : BaseActivity() {
             // Setting Sign Up UI functionality
             includeSignUpLayout.apply {
                 etFirstNameSignUp.addTextChangedListener { editable ->
-                    viewModelAuth.setUserFirstName(editable.toString())
+                    viewModelAuth.setUserFirstName(editable?.toString().orEmpty())
                 }
                 etLastNameSignUp.addTextChangedListener { editable ->
-                    viewModelAuth.setUserLastName(editable.toString())
+                    viewModelAuth.setUserLastName(editable?.toString().orEmpty())
                 }
                 etEmailSignUp.addTextChangedListener { editable ->
-                    viewModelAuth.setUserEmail(editable.toString())
+                    viewModelAuth.setUserEmail(editable?.toString().orEmpty())
                 }
                 etPswSignUp.addTextChangedListener { editable ->
-                    viewModelAuth.setUserPassword(editable.toString())
+                    viewModelAuth.setUserPassword(editable?.toString().orEmpty())
                 }
                 btnSubmitSignUp.setOnClickListener {
                     viewModelAuth.signUp()
@@ -321,9 +325,9 @@ class AuthActivity : BaseActivity() {
     }
 
     private fun signInWithGoogle() {
+        hideLoadingButton()
         val signInIntent = googleSignInHelper.getSignInIntent()
         signInLauncher.launch(signInIntent)
-
     }
 
     private fun handleSignInResult(data: Intent?) {
@@ -336,9 +340,11 @@ class AuthActivity : BaseActivity() {
                 )
                 googleSignInHelper.signOut()
             } catch (e: Exception) {
+                hideLoadingButton()
                 customSnackBar.launchSnackBar("Google sign in failed", error = true)
             }
         } else {
+            hideLoadingButton()
             customSnackBar.launchSnackBar("Google sign in failed", error = true)
         }
     }

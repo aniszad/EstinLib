@@ -1,66 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_main"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="@dimen/_16sdp"
-    android:id="@+id/cl_main"
-    android:layout_marginTop="@dimen/_8sdp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="10dp">
 
-    <TextView
-        android:id="@+id/tv_comment_owner_full_name"
+    <com.az.elib.presentation.ui.custom.InitialsAvatarView
+        android:id="@+id/im_user_image"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_comment_bubble"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="12dp"
+        android:background="@drawable/bg_comment_bubble"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp"
         app:layout_constraintEnd_toStartOf="@id/btn_delete_comment"
-        android:ellipsize="end"
-        />
-    <TextView
-        android:id="@+id/tv_comment_content"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_8sdp"
-        android:layout_marginTop="8dp"
-        android:textSize="13sp"
-        android:textColor="@color/colorTextGray"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btn_delete_comment"
-        app:layout_constraintTop_toBottomOf="@id/tv_comment_owner_full_name"
-        />
+        app:layout_constraintStart_toEndOf="@id/im_user_image"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_comment_owner_full_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/manrope_bold"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Anis Amine" />
+
+        <TextView
+            android:id="@+id/tv_comment_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:fontFamily="@font/manrope_regular"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_comment_owner_full_name"
+            tools:text="This is a professional comment bubble design." />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <TextView
         android:id="@+id/tv_comment_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/manrope_medium"
         android:textColor="@color/colorTextGray"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_comment_content"
-        />
+        android:textSize="11sp"
+        app:layout_constraintStart_toStartOf="@id/cl_comment_bubble"
+        app:layout_constraintTop_toBottomOf="@id/cl_comment_bubble"
+        tools:text="2h ago" />
+
     <ImageButton
         android:id="@+id/btn_delete_comment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/delete"
+        android:padding="6dp"
+        android:scaleType="fitCenter"
         android:src="@drawable/ic_delete"
-        android:background="@android:color/transparent"
-        app:tint="@color/colorRed"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        />
-    <View
-        android:layout_width="@dimen/_48sdp"
-        android:layout_height="@dimen/_1sdp"
-        android:layout_marginTop="@dimen/_8sdp"
-        android:background="@drawable/background_radius_white"
-        app:layout_constraintTop_toBottomOf="@id/tv_comment_date"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        />
+        app:tint="@color/colorRed"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -146,23 +146,24 @@ class SettingsActivity : BaseActivity() {
         binding.apply {
             imUser.setOnClickListener {
                 showWarningDialog("Custom images coming soon!", R.drawable.icon_camera) {}
-//                val changeProfileImageDialog = ChangeProfileImageDialog(this@SettingsActivity)
-//                changeProfileImageDialog.setupLoadingDialog { image ->
-//                    try {
-//                        viewModelSettings.changeUserImage(image)
-//                    }catch (e: Exception){
-//                        customSnackBar.launchSnackBar("Failed to change image", true)
-//                    }
-//                }
-//                changeProfileImageDialog.show()
             }
             llChangePassword.setOnClickListener {
                 showWarningDialog("Are you sure you want to change your password?", R.drawable.icon_key) {
                     viewModelSettings.sendChangePasswordEmail()
                 }
             }
+            llMyPosts.setOnClickListener {
+                showWarningDialog("My Posts feature coming soon!", R.drawable.icon_logo) {}
+            }
             llSignOut.setOnClickListener {
-                showWarningDialog("Are you sure you want to sign out?", R.drawable.icon_logout){viewModelSettings.signOutUser()}
+                showWarningDialog("Are you sure you want to sign out?", R.drawable.icon_logout) {
+                    viewModelSettings.signOutUser()
+                }
+            }
+            llDeleteAccount.setOnClickListener {
+                showWarningDialog("Are you sure you want to delete your account? This action is permanent.", R.drawable.ic_delete) {
+                    // viewModelSettings.deleteAccount()
+                }
             }
             toolbarSettings.setNavigationOnClickListener {
                 onBackPressedDispatcher.onBackPressed()

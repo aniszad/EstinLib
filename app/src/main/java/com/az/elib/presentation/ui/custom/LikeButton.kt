@@ -19,7 +19,8 @@ class LikeButton @JvmOverloads constructor(
 
     init {
         setImageResource(R.drawable.icon_heart_outline)
-        setOnClickListener { toggle() }
+        isClickable = false
+        isFocusable = false
     }
 
     fun setLiked(liked: Boolean, animate: Boolean = false) {
@@ -29,26 +30,20 @@ class LikeButton @JvmOverloads constructor(
         }
     }
 
-    fun reverseLiked() {
-        // when the btn is clicked through the image
-        toggle()
-
-    }
-
-    private fun toggle() {
+    fun toggle() {
         onLikeChanged?.invoke(isLiked)
         isLiked = !isLiked
         updateDrawable(true)
-
     }
 
     private fun updateDrawable(animate: Boolean) {
         val newDrawableRes = if (isLiked) R.drawable.icon_heart_filled else R.drawable.icon_heart_outline
-        val tint = ColorStateList.valueOf(context.getColor(if (isLiked) R.color.colorPurple else R.color.white))
+        val tint = ColorStateList.valueOf(context.getColor(if (isLiked) R.color.colorPrimaryAccent else R.color.colorTextGray))
+        
         if (animate) {
             animate()
-                .scaleX(0f)
-                .scaleY(0f)
+                .scaleX(0.7f)
+                .scaleY(0.7f)
                 .setDuration(animationDuration / 2)
                 .withEndAction {
                     setImageResource(newDrawableRes)
@@ -62,8 +57,7 @@ class LikeButton @JvmOverloads constructor(
                 .start()
         } else {
             setImageResource(newDrawableRes)
+            imageTintList = tint
         }
     }
-
-
 }

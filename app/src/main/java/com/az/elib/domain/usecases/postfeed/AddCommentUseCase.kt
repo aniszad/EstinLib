@@ -16,7 +16,8 @@ class AddCommentUseCase @Inject constructor(
             val commentRefId = feedRepo.createCommentRef()
             val userId = mySharedPreferences.getUserId() ?: throw Exception("User not found")
             val userFullName = mySharedPreferences.getFullName() ?: throw Exception("User not found")
-            val comment = Comment(id = commentRefId, ownerId = userId ,postId = postId, content = commentContent, ownerFullName = userFullName)
+            val userImage = mySharedPreferences.getUserImage()
+            val comment = Comment(id = commentRefId, ownerId = userId ,postId = postId, content = commentContent, ownerFullName = userFullName, ownerImage = userImage)
             feedRepo.addComment(comment)
             Result.success(comment)
         }catch(e: Exception){

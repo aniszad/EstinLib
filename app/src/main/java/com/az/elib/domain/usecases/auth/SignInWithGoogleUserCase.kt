@@ -16,19 +16,21 @@ class SignInWithGoogleUserCase @Inject constructor(
 
     suspend fun invokeSignInWithGoogle(googleSignInAccount: GoogleSignInAccount) : Result<String> {
         return try {
-            val userExists = repositoryFirestore.userExists(googleSignInAccount.email ?: throw Exception("Couldn't sign in"))
-            if (userExists.isFailure) throw Exception(userExists.exceptionOrNull()?.message ?: "User not found")
+            // 1. Authenticate with Firebase Auth first
             val credentials = GoogleAuthProvider.getCredential(googleSignInAccount.idToken, null)
-            val userId = repositoryAuth.signInWithCredentials(credentials)
+            val userIdResult = repositoryAuth.signInWithCredentials(credentials)
+            val userId = userIdResult.getOrThrow()
+
+            // 2. Check if email is verified
             val emailIsVerified = repositoryAuth.isEmailVerified().getOrNull()
             if (emailIsVerified == null || emailIsVerified == false) {
                 repositoryAuth.signOutUser()
                 Log.e("sign in", "email not verified")
                 throw Exception("Email not verified")
             }
-            val user = repositoryFirestore.getUserData(
-                userId.getOrNull() ?: throw Exception("Couldn't sign in")
-            )
+
+            // 3. Fetch user data (this also verifies if the user record exists)
+            val user = repositoryFirestore.getUserData(userId)
             Log.e("save data", "$user")
 
             sharedPreferences.saveUserLocalData(user)

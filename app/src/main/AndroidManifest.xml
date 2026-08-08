@@ -66,6 +66,7 @@
         <activity
             android:name=".presentation.ui.activities.AuthActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustResize"
             />
 
     </application>

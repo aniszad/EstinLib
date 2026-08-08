@@ -1,7 +1,6 @@
 package com.az.elib.presentation.ui.activities
 
-import android.Manifest
-import android.content.pm.PackageManager
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -10,10 +9,9 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.PopupMenu
 import android.widget.TextView
-import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Lifecycle
@@ -24,7 +22,6 @@ import com.az.elib.databinding.FragmentCreatePostBinding
 import com.az.elib.presentation.viewmodels.ViewModelCreatePost
 import com.az.elib.presentation.ui.custom.AttachmentView
 import com.az.elib.presentation.ui.dialogs.LoadingBarDialog
-import com.az.elib.presentation.ui.dialogs.PostSelectImageFragment
 import com.az.elib.util.CustomSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -41,26 +38,23 @@ class CreatePostActivity : BaseActivity(),
         CustomSnackBar(binding.main, this@CreatePostActivity)
     }
 
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-        } else {
-
+    private val pickMultipleMedia = registerForActivityResult(
+        ActivityResultContracts.PickMultipleVisualMedia(5)
+    ) { uris ->
+        if (uris.isNotEmpty()) {
+            viewModelCreatePost.addFiles(this, uris)
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //enableEdgeToEdge()
         binding = FragmentCreatePostBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSystemBarsColors(
-            ContextCompat.getColor(
-                this@CreatePostActivity,
-                R.color.colorPrimaryDark
-            )
-        )
+        
+        customizeSystemBars(binding.main.id, ContextCompat.getColor(this, R.color.colorPrimaryDark))
+        setNavigationBarColor(ContextCompat.getColor(this, R.color.colorSecondaryDark))
+        setStatusBarLight(false)
+        
         setUiFunc()
         setViewModelObservers()
         observeEditText()
@@ -68,52 +62,25 @@ class CreatePostActivity : BaseActivity(),
 
     private fun observeEditText() {
         binding.apply {
-            etPostText.addTextChangedListener { text ->
-                btnSubmitPost.isEnabled = text.toString().length >= 10
+            etPostText.addTextChangedListener {
+                updateSubmitButtonState()
             }
         }
     }
 
-    private fun checkAndRequestPermissions() {
-        val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Manifest.permission.READ_MEDIA_IMAGES
-        } else {
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        }
-
-        if (ContextCompat.checkSelfPermission(
-                this@CreatePostActivity,
-                permission
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            val postSelectImageFragment = PostSelectImageFragment()
-            postSelectImageFragment.show(supportFragmentManager, postSelectImageFragment.tag)
-        } else {
-            requestPermissionLauncher.launch(permission)
-        }
+    private fun updateSubmitButtonState() {
+        val hasText = binding.etPostText.text?.toString()?.trim()?.let { it.length >= 10 } ?: false
+        val hasAttachments = viewModelCreatePost.attachList.value.isNotEmpty()
+        binding.btnSubmitPost.isEnabled = hasText || hasAttachments
     }
 
     private fun setUiFunc() {
         binding.apply {
+            btnClose.setOnClickListener {
+                finish()
+            }
             btnAddAttachment.setOnClickListener {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    if (!ActivityCompat.shouldShowRequestPermissionRationale(this@CreatePostActivity, Manifest.permission.READ_MEDIA_IMAGES)) {
-                        Toast.makeText(
-                            this@CreatePostActivity,
-                            "Permission permanently denied, please grant access to it from app settings",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                } else {
-                    if (!ActivityCompat.shouldShowRequestPermissionRationale(this@CreatePostActivity, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                        Toast.makeText(
-                            this@CreatePostActivity,
-                            "Permission permanently denied, please grant access to it from app settings",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-                checkAndRequestPermissions()
+                pickMultipleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
             }
             btnAddTag.setOnClickListener {
                 showTagsMenu()
@@ -122,19 +89,12 @@ class CreatePostActivity : BaseActivity(),
                 showChannelsMenu()
             }
             btnSubmitPost.setOnClickListener {
-                loadingBarDialog.showLoadingDialog()
-                viewModelCreatePost.createPostAndNotification(etPostText)
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                btnAddChannel.setOnApplyWindowInsetsListener { view, insets ->
-                    val imeVisible = insets.isVisible(WindowInsets.Type.ime())
-                    val imeInsets = insets.getInsets(WindowInsets.Type.ime())
-                    if (imeVisible) {
-                        view.translationY = -imeInsets.bottom.toFloat()
-                    } else {
-                        view.translationY = 0f
-                    }
-                    insets
+                val content = etPostText.text.toString()
+                if (content.isNotBlank() || viewModelCreatePost.attachList.value.isNotEmpty()) {
+                    loadingBarDialog.showLoadingDialog()
+                    viewModelCreatePost.createPostAndNotification(content)
+                } else {
+                    customSnackBar.launchSnackBar("Post cannot be empty", true)
                 }
             }
         }
@@ -144,34 +104,33 @@ class CreatePostActivity : BaseActivity(),
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModelCreatePost.attachList.collect { attachHashMap ->
-                        binding.btnSubmitPost.isEnabled = attachHashMap.isNotEmpty()
-                        updatePickedFilesHv(attachHashMap.toList())
+                    viewModelCreatePost.attachList.collect { attachList ->
+                        updateSubmitButtonState()
+                        updatePickedFilesHv(attachList)
                     }
                 }
                 launch {
                     viewModelCreatePost.postCreatingResult.collect { result ->
-                        if (result == null) {
-                            return@collect
-                        }
+                        if (result == null) return@collect
                         loadingBarDialog.hideLoadingDialog()
-                        viewModelCreatePost.attachList.value.clear()
-                        if (!result.isSuccess) {
-                            customSnackBar.launchSnackBar("${result.exceptionOrNull()}", true)
+                        if (result.isSuccess) {
+                            viewModelCreatePost.clearData()
+                            binding.etPostText.text?.clear()
+                        } else {
+                            customSnackBar.launchSnackBar("${result.exceptionOrNull()?.message}", true)
                         }
+                        viewModelCreatePost.clearPostCreatingResult()
                     }
                 }
                 launch {
                     viewModelCreatePost.sendNotificationResult.collect { result ->
-                        if (result == null) {
-                            return@collect
-                        }
+                        if (result == null) return@collect
                         if (result.isSuccess) {
                             finish()
                         }
+                        viewModelCreatePost.clearSendNotificationResult()
                     }
                 }
-
             }
         }
     }
@@ -200,11 +159,12 @@ class CreatePostActivity : BaseActivity(),
 
     private fun updatePickedFilesHv(attachList: List<Pair<String, Uri>>) {
         binding.hsvAttachmentsSv.removeAllViews()
-        for (attach in attachList) {
-            val attachmentView = AttachmentView(this@CreatePostActivity, null)
-            attachmentView.onRemoveClickListener = this
-            attachmentView.setText(attach.first)
-            attachmentView.setFileUri(attach.second)
+        attachList.forEach { attach ->
+            val attachmentView = AttachmentView(this@CreatePostActivity, null).apply {
+                onRemoveClickListener = this@CreatePostActivity
+                setText(attach.first)
+                setFileUri(attach.second)
+            }
             binding.hsvAttachmentsSv.addView(attachmentView)
         }
     }
@@ -216,7 +176,6 @@ class CreatePostActivity : BaseActivity(),
     }
 
     override fun onRemoveButtonClickListener(position: Int, textView: TextView) {
-        binding.hsvAttachmentsSv.removeViewAt(position)
         viewModelCreatePost.removeFromAttachList(textView.text.toString())
     }
 

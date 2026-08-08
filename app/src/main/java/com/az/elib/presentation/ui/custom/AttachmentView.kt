@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.az.elib.R
 import com.bumptech.glide.Glide
@@ -41,12 +40,9 @@ class AttachmentView(context : Context, attrs : AttributeSet?) : MaterialCardVie
             onRemoveClickListener?.onRemoveButtonClickListener(getPosition(), textView)
         }
         rootView.setOnClickListener {
-
             if (isPreviewing) {
-                Toast.makeText(context, "hahaha", Toast.LENGTH_SHORT).show()
                 hidePreview()
-            }else {
-                Toast.makeText(context, "kaa", Toast.LENGTH_SHORT).show()
+            } else {
                 showPreview()
             }
         }
@@ -61,7 +57,7 @@ class AttachmentView(context : Context, attrs : AttributeSet?) : MaterialCardVie
         imAttachIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icon_image))
     }
     private fun showPreview() {
-        attachUri?.let { uri ->
+        attachUri.let { uri ->
             val requestOptions = RequestOptions().override(MAX_WIDTH, MAX_HEIGHT)
 
             Glide.with(context)
@@ -75,7 +71,6 @@ class AttachmentView(context : Context, attrs : AttributeSet?) : MaterialCardVie
                     }
 
                     override fun onLoadCleared(placeholder: Drawable?) {
-                        // Handle resource cleared (optional)
                     }
                 })
         }
