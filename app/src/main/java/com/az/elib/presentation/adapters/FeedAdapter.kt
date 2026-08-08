@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,7 +50,6 @@ class FeedAdapter(
     private var onPostImageLongClick: OnPostImageLongClick? = null
     private var showLoadMoreButton = true
     private val timeFormatter = TimeFormatter()
-    private var isLiked = false
     private var isLoading = false
     private lateinit var attachmentImagesAdapter: PostImageAdapter
     private lateinit var popupMenu: PopupMenu
@@ -148,12 +146,12 @@ class FeedAdapter(
                     )
                     
                     tvReactCount.text = ReactionCountFormatter.formatReactionCount(currentPost.postReactCount)
-                    isLiked = currentPost.postLikesIds.contains(currentUserId)
-                    btnReact.setLiked(isLiked, false)
-                    tvReactCount.setTextColor(ContextCompat.getColor(context, if (isLiked) R.color.colorPrimaryAccent else R.color.colorTextGray))
+                    val isLikedByMe = currentPost.postLikesIds.contains(currentUserId)
+                    btnReact.setLiked(isLikedByMe, false)
+                    tvReactCount.setTextColor(ContextCompat.getColor(context, if (isLikedByMe) R.color.colorPrimaryAccent else R.color.colorTextGray))
                     
                     llLike?.setOnClickListener {
-                        btnReact.reverseLiked()
+                        btnReact.toggle()
                     }
 
                     btnReact.onLikeChanged = { liked ->
@@ -161,11 +159,11 @@ class FeedAdapter(
                         if (isNowLiked) {
                             tvReactCount.text = ReactionCountFormatter.increment(tvReactCount.text.toString())
                             tvReactCount.setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryAccent))
-                            onReactClickListener?.addReaction(currentPost.id, position)
+                            onReactClickListener?.addReaction(currentPost.id, holder.bindingAdapterPosition)
                         } else {
                             tvReactCount.text = ReactionCountFormatter.decrement(tvReactCount.text.toString())
                             tvReactCount.setTextColor(ContextCompat.getColor(context, R.color.colorTextGray))
-                            onReactClickListener?.removeReaction(currentPost.id, position)
+                            onReactClickListener?.removeReaction(currentPost.id, holder.bindingAdapterPosition)
                         }
                     }
 
@@ -254,7 +252,7 @@ class FeedAdapter(
         val viewPager2: ViewPager2 = tvPostImagesViewPager
         attachmentImagesAdapter = PostImageAdapter(context, postImageAttachments)
         attachmentImagesAdapter.setOnDoubleClickListenerListener(OnDoubleClickListener {
-            btnReact.reverseLiked()
+            btnReact.toggle()
         })
         viewPager2.adapter = attachmentImagesAdapter
         dotsIndicator.attachTo(tvPostImagesViewPager)
